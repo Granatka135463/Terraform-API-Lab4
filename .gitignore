@@ -1,0 +1,11 @@
+Local.terraform directories and cache
+.terraform/
+.terraform.*
+Local state files (if generated accidentally)
+*.tfstate
+.tfstate.
+Crash logs
+crash.log
+Variables files containing sensitive data
+*.tfvars
+.env
