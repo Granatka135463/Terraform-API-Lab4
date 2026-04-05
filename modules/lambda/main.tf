@@ -47,6 +47,20 @@ resource "aws_iam_role_policy" "dynamodb_access" {
   })
 }
 
+resource "aws_iam_role_policy" "comprehend_access" {
+  name = "${var.function_name}-comprehend-access"
+  role = aws_iam_role.lambda_exec.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect   = "Allow"
+      Action   = ["comprehend:DetectDominantLanguage"]
+      Resource = "*"
+    }]
+  })
+}
+
 # Lambda-функція
 resource "aws_lambda_function" "api_handler" {
   filename         = data.archive_file.lambda_zip.output_path
@@ -54,7 +68,7 @@ resource "aws_lambda_function" "api_handler" {
   role             = aws_iam_role.lambda_exec.arn
   handler          = "app.handler"
   runtime          = "python3.12"
-  timeout          = 10   # HEAD-запити потребують більше часу
+  timeout          = 10
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
 
   environment {
